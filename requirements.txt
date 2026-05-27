@@ -1,0 +1,10 @@
+fastapi
+uvicorn
+sqlalchemy
+aiosqlite
+python-jose[cryptography]
+bcrypt
+pydantic[email]
+pytest
+pytest-asyncio
+httpx
