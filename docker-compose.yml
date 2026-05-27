@@ -1,0 +1,10 @@
+services:
+  web:
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./data:/app/data
+    environment:
+      - DATABASE_URL=sqlite+aiosqlite:////app/data/expeditions.db
+      - SECRET_KEY=a-very-secure-jwt-secret-key-goes-here-which-is-long

@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.future import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -7,6 +7,7 @@ from app.models import User, Expedition, ExpeditionMember
 from app.schemas import ExpeditionCreate, ExpeditionResponse
 from app.security import get_current_user
 from app.websocket import manager
+
 
 router = APIRouter(prefix="/expeditions", tags=["expeditions"])
 
@@ -100,7 +101,7 @@ async def set_active(
             detail="Expedition must be in ready status to transition to active"
         )
     
-    if exp.start_at > datetime.utcnow():
+    if exp.start_at > datetime.now(timezone.utc).replace(tzinfo=None):
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Cannot start expedition before its start date/time"

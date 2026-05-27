@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.future import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -8,6 +8,7 @@ from app.schemas import ExpeditionMemberResponse
 from app.security import get_current_user
 from app.websocket import manager
 from pydantic import BaseModel
+
 
 router = APIRouter(tags=["members"])
 
@@ -84,7 +85,7 @@ async def confirm_member(
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invitation is already confirmed or in an invalid state")
         
     member.state = "confirmed"
-    member.confirmed_at = datetime.utcnow()
+    member.confirmed_at = datetime.now(timezone.utc).replace(tzinfo=None)
     await db.commit()
     await db.refresh(member)
     
